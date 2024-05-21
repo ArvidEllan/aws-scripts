@@ -27,6 +27,14 @@ Query to identify AWS resource modifications by non-administrative users:
     source="cloudtrail" eventName="Modify*"
     | stats count by userIdentity.userName, eventName
     | where eventName!="ModifyInstance" AND eventName!="ModifyVolume" AND eventName!="ModifyVpc"
+Query to identify potential unusual API calls:
+    source="cloudtrail" NOT eventName="Describe*" NOT eventName="List*" NOT eventName="Get*"
+    | stats count by eventName
+Query to identify potential changes to AWS Lambda functions:
+    source="cloudtrail" eventName="CreateFunction" OR eventName="UpdateFunctionConfiguration" OR eventName="UpdateFunctionCode" OR eventName="DeleteFunction"
+    | stats count by userIdentity.userName, eventName
+
+
 
 
 
